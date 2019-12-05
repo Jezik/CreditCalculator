@@ -1,21 +1,30 @@
-principal = int(input("Enter the credit principal:\n"))
-command = input("What do you want to calculate?\ntype 'm' - for count of months,\ntype 'p' - for monthly payment:")
-if command == "m":
-    payment = int(input("Enter monthly payment:\n"))
-    period = principal // payment
-    if period == 1:
-        print("\nIt takes 1 month to repay the credit")
-    else:
-        if principal % payment == 0:
-            print("\nIt takes {0} months to repay the credit".format(period))
-        else:
-            print("\nIt takes {0} months to repay the credit".format(principal // payment + 1))
+import math
+
+command = input("What do you want to calculate?\ntype 'n' - for count of months,\ntype 'a' - for annuity monthly payment,\n" +
+                "type 'p' - for credit principal:\n")
+if command == "n":
+    principal = int(input("Enter the credit principal:\n"))
+    monthly_payment = float(input("Enter monthly payment:\n"))
+    credit_interest = float(input("Enter credit interest:\n"))
+    month_interest = credit_interest / 100 / 12
+    period = math.log(monthly_payment / (monthly_payment - month_interest * principal), 1 + month_interest)
+    period = math.ceil(period)
+    years = period // 12
+    months = period % 12
+    print("You need {0} years and {1} months to repay the credit!".format(years, months))
+elif command == "a":
+    principal = int(input("Enter the credit principal:\n"))
+    periods = int(input("Enter count of periods:\n"))
+    credit_interest = float(input("Enter credit interest:\n"))
+    month_interest = credit_interest / 100 / 12
+    annuity_payment = principal * (month_interest * math.pow(1 + month_interest, periods) / (math.pow(1 + month_interest, periods) - 1))
+    print("Your annuity payment = {0}!".format(math.ceil(annuity_payment)))
 elif command == "p":
-    count = int(input("Enter count of months:\n"))
-    payment = principal // count
-    if payment * count == principal:
-        print("\nYour monthly payment = {0}".format(payment))
-    else:
-        payment += 1 
-        last_paymment = principal - (count - 1) * payment
-        print("\nYour monthly payment = {0} with last month payment = {1}".format(payment, last_paymment))
+    monthly_payment = float(input("Enter monthly payment:\n"))
+    periods = int(input("Enter count of periods:\n"))
+    credit_interest = float(input("Enter credit interest:\n"))
+    month_interest = credit_interest / 100 / 12
+    principal = monthly_payment / (month_interest * math.pow(1 + month_interest, periods) / (math.pow(1 + month_interest, periods) - 1))
+    print("Your credit principal = {0}!".format(math.floor(principal)))
+else:
+    print("Unknown command")
